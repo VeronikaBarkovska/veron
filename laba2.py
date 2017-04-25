@@ -12,7 +12,7 @@ city = {1: 'Cherkasy', 2: 'Chernihiv', 3: 'Chernivtsi', 4: 'Crimea', 5: 'Dniprop
 class Tables(server.App):
     title = "Tables"
     inputs = [{"type": 'dropdown',
-               "label": 'Company',
+               "label": 'City',
                "options": [{'label': i, 'value': j} for j, i in city.items()],
                "key": 'city',
                "action_id": "update_data"},
@@ -36,26 +36,7 @@ class Tables(server.App):
                   'action_id': 'update_data'
               },
 
-              {"type": 'dropdown', 'label': 'Color',
-               'options': [{'label': 'Black', 'value': 'black'},
-                           {'label': 'Yellow', 'value': 'yellow'},
-                           {'label': 'Brown', 'value': 'brown'},
-                           {'label': 'Blue', 'value': 'blue'},
-                           {'label': 'Green', 'value': 'green'}],
-               'key': 'color',
-               'action_id': 'update_data'
-               },
 
-              {"type": 'dropdown', 'label': 'Style',
-               'options': [{'label': '1Style', 'value': 'line'},
-                           {'label': '2Style', 'value': 'bar'},
-                           {'label': '3Style', 'value': 'hist'},
-                           {'label': '4Style', 'value': 'hexbin'},
-                           {'label': '5Style', 'value': 'scatter'}],
-
-               'key': 'style',
-               'action_id': 'update_data'
-               }
 
               ]
 
@@ -77,7 +58,7 @@ class Tables(server.App):
         first_year = int(params['first_year'])
         second_year = int(params['second_year'])
 
-        df = pd.read_csv('vhi_id_{} 2017.03.13 17-19-22.csv'.format(city), index_col=False, header=1, skipfooter=1,
+        df = pd.read_csv('vhi_id_{} 2017.03.28 13-38-45.csv'.format(city), index_col=False, header=1, skipfooter=1,
                          engine='python',
                          names=['year', 'week', 'SMN', 'SMT', 'VCI', 'TCI', 'VHI'], delimiter='\,\s+|\s+|\,')
 
@@ -87,10 +68,9 @@ class Tables(server.App):
 
     def getPlot(self, params):
         data = params['some_value']
-        color = params['color']
-        style = params['style']
+
         df_1 = self.getData(params)
-        plt_obj_1 = df_1.plot(x='week', y=data, colors=color, kind=style)
+        plt_obj_1 = df_1.plot(x='week', y=data)
 
         fig = plt_obj_1.get_figure()
 
@@ -99,3 +79,4 @@ class Tables(server.App):
 
 app = Tables()
 app.launch(port=9022)
+
